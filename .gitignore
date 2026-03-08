@@ -56,6 +56,7 @@ backend/*.sqlite
 backend/*.sqlite3
 db/**/*.db
 
+
 # Generated mapping/review outputs (rebuildable from raw records)
 record/OCR/*.html
 record/Mapping/*_matches.html
@@ -65,6 +66,7 @@ record/Mapping/*.zip
 record/Review/*_Reviewed.html
 record/Review/*_ReviewLog.json
 record/Review/*.zip
+record/
 
 # Generated embedding/cache artifacts
 db/**/*.npz
