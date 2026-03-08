@@ -1,0 +1,82 @@
+# ===== Reproducibility-Critical Configs =====
+# Keep env templates in Git for reproducible setup
+!**/.env.example
+!**/.env.template
+
+# ===== Environment Variables (Secrets / Local) =====
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Allow templates after broad .env rules
+!**/.env.example
+!**/.env.template
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+.eggs/
+build/
+dist/
+pip-wheel-metadata/
+
+# Virtual environments
+.venv/
+venv/
+env/
+**/.venv/
+**/venv/
+**/env/
+
+# ===== Node / Frontend =====
+**/node_modules/
+**/.vite/
+**/dist/
+**/build/
+**/coverage/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# ===== Local Runtime / Generated Outputs =====
+# Local SQLite files generated during app runtime
+backend/*.db
+backend/*.sqlite
+backend/*.sqlite3
+db/**/*.db
+
+# Generated mapping/review outputs (rebuildable from raw records)
+record/OCR/*.html
+record/Mapping/*_matches.html
+record/Mapping/*_matches.json
+record/Mapping/*_record.json
+record/Mapping/*.zip
+record/Review/*_Reviewed.html
+record/Review/*_ReviewLog.json
+record/Review/*.zip
+
+# Generated embedding/cache artifacts
+db/**/*.npz
+db/fndds/*.EXE
+db/fndds/*.mdb
+
+# ===== IDE =====
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===== OS =====
+.DS_Store
+Thumbs.db

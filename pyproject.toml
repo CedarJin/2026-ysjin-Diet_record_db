@@ -1,0 +1,33 @@
+[project]
+name = "dietary-record-db"
+version = "0.1.0"
+description = "Diet Record Review System with FNDDS mapping"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    # FNDDS mapping & record processing
+    "beautifulsoup4>=4.12.0",
+    "rank-bm25>=0.2.2",
+    # SAS file reading
+    "pandas>=2.0.0",
+    "pyreadstat>=1.2.0",
+    # PDF & image processing (parse_dietary_record, convert_pdf_to_jpg)
+    "PyMuPDF>=1.23.0",
+    "Pillow>=10.0.0",
+    # Excel metadata (parse_dietary_record: record_meta.xlsx)
+    "openpyxl>=3.1.0",
+    # API & env (parse_dietary_record, chatgpt_example)
+    "python-dotenv>=1.0.0",
+    "openai>=1.0.0",
+    # Backend (FastAPI, auth, DB)
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "sqlmodel>=0.0.22",
+    "SQLAlchemy>=2.0.0",
+    "loguru>=0.7.0",
+    "passlib[bcrypt]>=1.7.4",
+    "python-jose[cryptography]>=3.3.0",
+    "python-multipart>=0.0.6",
+    "sentence-transformers>=5.2.2",
+    "numpy>=2.2.6",
+]
