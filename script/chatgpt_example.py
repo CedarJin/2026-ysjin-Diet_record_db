@@ -14,7 +14,11 @@ from openai import OpenAI
 load_dotenv()
 
 # Initialize the OpenAI client with your API key
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+_base_url = os.getenv("OPENAI_BASE_URL")
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    base_url=_base_url if _base_url else None,
+)
 
 
 def chat_with_gpt(messages, model="gpt-3.5-turbo", temperature=0.7):

@@ -11,7 +11,10 @@ The pipeline consists of 6 steps:
 3. **Parse Records**: Extracts food items from reviewed HTML records and generates JSON files
 4. **GPT-5.2 Normalization**: Uses GPT-5.2 to normalize food descriptions and extract structured information (core_food, modifiers, process_method)
 5. **Embedding Similarity Matching**: Queries using **normalized description**, ranks all FNDDS candidates by embedding similarity, and returns top 10 per food
-6. **Visualization**: Generates HTML files showing **top 10** candidates per food with similarity score
+6. **Portion Mapping**: Uses the GPT-selected FNDDS food, maps the original amount/unit to one food-specific FNDDS portion code, and converts the amount to grams
+7. **Visualization**: Generates HTML files showing **top 10** candidates per food with similarity score and portion/gram conversion
+8. **FNDDS Nutrient Results**: Calculates nutrient amounts for each mapped food and daily totals using mapped grams
+9. **FNDDS Nutrient HTML Reports**: Generates readable per-record result pages and a `results/fndds/index.html`
 
 ## Installation
 
@@ -46,11 +49,14 @@ uv run python fndds_record_mapping.py
 
 ## Output Structure
 
-The pipeline generates files in `record/Mapping/`:
+The pipeline generates files in `record/FNDDSMapping/`:
 
 - `{record_id}_record.json`: Normalized record data with metadata and food items (includes core_food, modifiers, process_method, normalized_description)
-- `{record_id}_matches.json`: Match results with **top 10** per food (each item has `food_code`, `main_food_description`, `similarity_score` [embedding similarity])
-- `{record_id}_matches.html`: Visualization HTML showing **top 10** candidates per food with similarity score
+- `{record_id}_matches.json`: Match results with **top 10** per food (each item has `food_code`, `main_food_description`, `similarity_score` [embedding similarity]) plus selected portion and gram conversion fields
+- `{record_id}_matches.html`: Visualization HTML showing **top 10** candidates per food with similarity score, selected portion, and converted grams
+- `results/fndds/{record_id}_fndds_nutrients.json`: FNDDS nutrient amounts per mapped food and record-level daily nutrient totals
+- `results/fndds/{record_id}_fndds_nutrients.html`: Readable nutrient result report for one record
+- `results/fndds/index.html`: Index page linking all record nutrient reports
 - `db/fndds/fndds_embeddings.npz`: Precomputed FNDDS embeddings (food_codes + embeddings) from Step 2
 
 ### Normalized JSON Structure
@@ -63,6 +69,32 @@ Each food item in `{record_id}_record.json` includes:
 - `process_method`: Cooking/preparation method if mentioned (e.g., "baked", "grilled", null)
 - `amount`: Amount value
 - `unit`: Unit of measurement
+
+### Match JSON Portion Fields
+
+Each food item in `{record_id}_matches.json` includes:
+- `amount`: Original amount from the reviewed record
+- `unit`: Original unit from the reviewed record
+- `normalized_unit`: Unit normalized during GPT food normalization, used for portion conversion when available
+- `gpt_selected_food_code`: Final FNDDS food selected from the top 10 food candidates
+- `mapped_portion_code`: Food-specific FNDDS portion code selected for the original unit
+- `mapped_portion_description`: FNDDS portion description for the selected portion code
+- `mapped_portion_weight`: Gram weight for one selected FNDDS portion
+- `grams`: Converted gram amount for the reviewed record entry
+- `gram_conversion_method`: How grams were calculated, such as `portion_unit_ratio`, `equivalent_volume_unit_ratio`, `direct_mass_unit`, or `amount_times_selected_portion_weight`
+
+### FNDDS Nutrient Result JSON
+
+Each record-level file in `results/fndds/` includes:
+- `subject_id`, `day_of_week`, `diet_type`, `date_of_record`, `reviewer_id`
+- `foods`: One entry per mapped food with food code, original food description, amount/unit/grams, mapped portion, and calculated nutrients
+- `daily_nutrient_totals`: Sum of each nutrient across the full record day
+
+FNDDS nutrient values are treated as values per 100 g, so each nutrient amount is calculated as:
+
+```text
+nutrient_amount = value_per_100g * grams / 100
+```
 
 ## Normalization
 

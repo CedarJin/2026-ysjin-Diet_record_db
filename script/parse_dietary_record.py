@@ -20,7 +20,11 @@ from convert_pdf_to_jpg import PDFToPNGConverter
 load_dotenv()
 
 # Initialize OpenAI client
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+_base_url = os.getenv("OPENAI_BASE_URL")
+client = OpenAI(
+    api_key=os.getenv("OPENAI_API_KEY"),
+    base_url=_base_url if _base_url else None,
+)
 
 # Initialize PDF converter with max dimension 3000
 converter = PDFToPNGConverter(max_long_side=2000)

@@ -67,11 +67,15 @@ record/Review/*_Reviewed.html
 record/Review/*_ReviewLog.json
 record/Review/*.zip
 record/
+results/
 
 # Generated embedding/cache artifacts
 db/**/*.npz
 db/fndds/*.EXE
 db/fndds/*.mdb
+db/fndds/
+db/glycopedia/
+db/polyphenol/
 
 # ===== IDE =====
 .vscode/
